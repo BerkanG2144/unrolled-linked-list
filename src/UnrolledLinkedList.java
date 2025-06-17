@@ -28,10 +28,20 @@ public class UnrolledLinkedList {
         }
     }
 
+    /** Default capacity used by the parameterless constructor. */
+    private static final int DEFAULT_ARRAY_SIZE = 4;
+
     private final int arraySize;
     private int totalSize;
     private Node head;
     private Node tail;
+
+    /**
+     * Creates a new empty unrolled linked list using the default array size.
+     */
+    public UnrolledLinkedList() {
+        this(DEFAULT_ARRAY_SIZE);
+    }
 
     /**
      * Creates a new empty unrolled linked list with the given array size per node.
@@ -50,23 +60,19 @@ public class UnrolledLinkedList {
      * Creates a new node if the current tail is full.
      *
      * @param element the element to add
-     * @return {@code true} if a new array was created, otherwise {@code false}
+     * @return {@code true} once the element has been inserted
      */
     public boolean push(int element) {
-        if (tail.count < arraySize) {
-            tail.elements[tail.count++] = element;
-            totalSize++;
-            return false;
-        } else {
+        if (tail.count == arraySize) {
             Node newNode = new Node(arraySize);
             tail.next = newNode;
             newNode.prev = tail;
             tail = newNode;
-
-            tail.elements[tail.count++] = element;
-            totalSize++;
-            return true;
         }
+
+        tail.elements[tail.count++] = element;
+        totalSize++;
+        return true;
     }
 
     /**
@@ -154,7 +160,7 @@ public class UnrolledLinkedList {
 
         while (current != null) {
             for (int i = 0; i < current.count; i++) {
-                if (!sb.isEmpty()) {
+                if (sb.length() > 0) {
                     sb.append(separator);
                 }
                 sb.append(current.elements[i]);
