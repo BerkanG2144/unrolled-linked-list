@@ -12,10 +12,14 @@ public class UnrolledLinkedList {
      * Each node holds an array of integers and links to previous/next nodes.
      */
     private static class Node {
-        int[] elements;
-        int count;
-        Node prev;
-        Node next;
+        /** array storing the elements of this node */
+        private final int[] elements;
+        /** number of used slots in {@link #elements} */
+        private int count;
+        /** previous node in the list */
+        private Node prev;
+        /** next node in the list */
+        private Node next;
 
         /**
          * Creates a new node with an internal array of given size.
@@ -49,6 +53,7 @@ public class UnrolledLinkedList {
      * @param arraySize maximum number of elements per node (must be > 0)
      */
     public UnrolledLinkedList(int arraySize) {
+        assert arraySize > 0 : "arraySize must be > 0";
         this.arraySize = arraySize;
         this.totalSize = 0;
         this.head = new Node(arraySize);
@@ -82,6 +87,7 @@ public class UnrolledLinkedList {
      * @return {@code true} if a node was removed, otherwise {@code false}
      */
     public boolean pop() {
+        assert !isEmpty() : "cannot pop from empty list";
         tail.count--;
         totalSize--;
 
@@ -100,6 +106,7 @@ public class UnrolledLinkedList {
      * @return the element at index {@code i}
      */
     public int get(int i) {
+        assert i >= 0 && i < totalSize : "index out of range";
         int index = i;
         Node currentNode = head;
         while (index >= currentNode.count) {
@@ -116,6 +123,15 @@ public class UnrolledLinkedList {
      */
     public int size() {
         return totalSize;
+    }
+
+    /**
+     * Checks whether the list contains no elements.
+     *
+     * @return {@code true} if the list is empty
+     */
+    public boolean isEmpty() {
+        return totalSize == 0;
     }
 
     /**
@@ -169,5 +185,10 @@ public class UnrolledLinkedList {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return toString(", ");
     }
 }
